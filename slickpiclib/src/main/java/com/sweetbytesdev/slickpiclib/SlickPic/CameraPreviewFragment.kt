@@ -1,6 +1,7 @@
 package com.sweetbytesdev.slickpiclib.SlickPic
 
 
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -9,8 +10,9 @@ import android.view.ViewGroup
 
 import com.sweetbytesdev.slickpiclib.R
 import com.camerakit.CameraKitView
-import android.support.annotation.NonNull
 import android.widget.Button
+import android.widget.Toast
+import com.sweetbytesdev.slickpiclib.Utility.Message
 
 
 /**
@@ -19,6 +21,7 @@ import android.widget.Button
  */
 class CameraPreviewFragment : Fragment() {
 
+    lateinit var mViewModel: SlickPicViewModel
     private var cameraKitView: CameraKitView? = null
 
     companion object {
@@ -34,9 +37,10 @@ class CameraPreviewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mViewModel = ViewModelProviders.of(activity!!).get(SlickPicViewModel::class.java)
         cameraKitView = view.findViewById<CameraKitView>(R.id.camera)
         view.findViewById<Button>(R.id.test_button).setOnClickListener {
-
+            mViewModel.mMessenger.postValue(Message.SELECTED)
         }
     }
 
@@ -53,5 +57,10 @@ class CameraPreviewFragment : Fragment() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         cameraKitView?.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Toast.makeText(activity, "Destroying camera frag", Toast.LENGTH_SHORT).show()
     }
 }

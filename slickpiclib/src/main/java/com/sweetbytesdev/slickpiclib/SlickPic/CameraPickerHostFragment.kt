@@ -3,24 +3,23 @@ package com.sweetbytesdev.slickpiclib.SlickPic
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.PagerAdapter
+import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 
 import com.sweetbytesdev.slickpiclib.R
+import java.util.ArrayList
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- *
- */
 class CameraPickerHostFragment : Fragment() {
+
+    private lateinit var mViewPager: ViewPager
+    private lateinit var mTabLayout: TabLayout
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -31,7 +30,48 @@ class CameraPickerHostFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var viewPager = view.findViewById<ViewPager>(R.id.view_pager)
-//        var pagerAdapter = PagerAdapter(supp)
+        mTabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
+        mViewPager = view.findViewById<ViewPager>(R.id.view_pager)
+        activity?.supportFragmentManager
+        setUpViewPager()
+    }
+
+    private fun setUpViewPager() {
+        var adapter = ViewPagerAdapter(fragmentManager!!)
+        adapter.addFragment(CameraPreviewFragment.getInstance(), "CAMERA")
+        adapter.addFragment(GalleryPickerFragment.getInstance(), "GALLERY")
+        mViewPager.adapter = adapter
+        mTabLayout.setupWithViewPager(mViewPager)
+    }
+
+    class ViewPagerAdapter : FragmentPagerAdapter {
+
+        private val mFragmentList = ArrayList<Fragment>()
+        private val mFragmentTitleList = ArrayList<String>()
+
+        constructor(manager: FragmentManager): super(manager) {}
+
+        override fun getItem(position: Int): Fragment {
+            return mFragmentList[position]
+        }
+
+        override fun getCount(): Int {
+            return mFragmentList.size
+        }
+
+        fun addFragment(fragment: Fragment, title: String) {
+            mFragmentList.add(fragment)
+            mFragmentTitleList.add(title)
+        }
+
+        override fun getPageTitle(position: Int): CharSequence? {
+            return mFragmentTitleList[position]
+        }
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Toast.makeText(activity, "Destroying Host frag", Toast.LENGTH_SHORT).show()
     }
 }
