@@ -13,7 +13,7 @@ class SlickPicActivity : AppCompatActivity() {
 
         var button = findViewById<Button>(R.id.button)
         button.setOnClickListener {
-            SlickPic.start(this, 2)
+            SlickPic.start(this, 2, 5)
         }
     }
 }

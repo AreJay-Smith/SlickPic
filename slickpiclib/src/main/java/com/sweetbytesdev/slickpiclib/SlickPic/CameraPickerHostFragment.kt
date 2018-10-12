@@ -38,8 +38,8 @@ class CameraPickerHostFragment : Fragment() {
 
     private fun setUpViewPager() {
         var adapter = ViewPagerAdapter(fragmentManager!!)
-        adapter.addFragment(CameraPreviewFragment.getInstance(), "CAMERA")
-        adapter.addFragment(GalleryPickerFragment.getInstance(), "GALLERY")
+        adapter.addFragment(CameraPreviewFragment.getInstance(), "Camera")
+        adapter.addFragment(GalleryPickerFragment.getInstance(), "Gallery")
         mViewPager.adapter = adapter
         mTabLayout.setupWithViewPager(mViewPager)
     }

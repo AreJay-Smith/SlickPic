@@ -16,13 +16,14 @@
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"
         app:tabMode="fixed"
+        app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:background="?attr/colorPrimary"
-        android:elevation="6dp"
+        android:layout_height="50dp"
+        android:background="@color/colorPrimary"
         app:tabTextColor="#d3d3d3"
         app:tabSelectedTextColor="#ffffff"
-        app:tabIndicatorColor="#ff00ff"
+        app:tabIndicatorColor="#ffff"
+        app:tabBackground="@drawable/tab_theme"
         android:minHeight="?attr/actionBarSize"
         android:layout_alignParentBottom="true"
     />

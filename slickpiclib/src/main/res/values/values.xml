@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimaryLight">#0f0f0f</color>
+    <color name="colorPrimary">#000</color>
+
+    <color name="colorPrimaryLightPicPool">#0f0f0f</color>
+    <color name="colorPrimaryPicPool">#000</color>
+
+    <color name="colorPrimaryLightSlickPic">#0f0f0f</color>
+    <color name="colorPrimarySlickPic">#000</color>
+</resources>
+
