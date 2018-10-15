@@ -8,5 +8,6 @@
 
     <color name="colorPrimaryLightSlickPic">#0f0f0f</color>
     <color name="colorPrimarySlickPic">#000</color>
+    <color name="colorPrimarySlickPicTransparent">#80000000</color>
 </resources>
 

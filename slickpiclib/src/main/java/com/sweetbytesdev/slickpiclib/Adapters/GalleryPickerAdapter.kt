@@ -13,6 +13,7 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.FitCenter
 import com.bumptech.glide.request.RequestOptions
+import com.sweetbytesdev.slickpiclib.Interfaces.OnSelectionListener
 import com.sweetbytesdev.slickpiclib.Interfaces.SectionIndexer
 import com.sweetbytesdev.slickpiclib.Models.Img
 import com.sweetbytesdev.slickpiclib.R
@@ -34,6 +35,7 @@ class GalleryPickerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>, Head
     private val layoutParams: FrameLayout.LayoutParams
     private val glide: RequestManager
     private val options: RequestOptions
+    private var onSelectionListener: OnSelectionListener? = null
 
     constructor(context: Context) {
         this.context = context
@@ -44,6 +46,10 @@ class GalleryPickerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>, Head
         layoutParams.setMargins(MARGIN, MARGIN - 1, MARGIN, MARGIN - 1)
         options = RequestOptions().override(360).transform(CenterCrop()).transform(FitCenter())
         glide = Glide.with(context)
+    }
+
+    fun addOnSelectionListener(onSelectionListener: OnSelectionListener) {
+        this.onSelectionListener = onSelectionListener
     }
 
     fun updateImageList(images: ArrayList<Img>) {
@@ -86,7 +92,7 @@ class GalleryPickerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>, Head
         var image = list[position]
         if (holder is Holder) {
             glide.load(image.contentUrl).apply(options).into(holder.preview)
-//            holder.selection.visibility = if (image.isSelected!!) View.VISIBLE else View.GONE
+            holder.selection.visibility = if (image.isSelected!!) View.VISIBLE else View.GONE
         } else if (holder is HeaderHolder) {
             holder.header.text = image.headerDate
         }
@@ -144,12 +150,12 @@ class GalleryPickerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>, Head
 
         override fun onClick(view: View) {
             val id = this.layoutPosition
-//            onSelectionListener?.OnClick(list[id], view, id)
+            onSelectionListener?.OnClick(list[id], view, id)
         }
 
         override fun onLongClick(view: View): Boolean {
             val id = this.layoutPosition
-//            onSelectionListener?.OnLongClick(list[id], view, id)
+            onSelectionListener?.OnLongClick(list[id], view, id)
             return true
         }
     }
