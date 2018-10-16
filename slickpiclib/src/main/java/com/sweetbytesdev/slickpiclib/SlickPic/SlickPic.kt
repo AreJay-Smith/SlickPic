@@ -105,7 +105,7 @@ class SlickPic : AppCompatActivity() {
                 if (fragSelected != null) {
                     supportFragmentManager.beginTransaction().show(fragSelected).commit()
                 } else {
-                    supportFragmentManager.beginTransaction().add(R.id.frag_container, GalleryPickerFragment(), Tag.SELECTED).commit()
+                    supportFragmentManager.beginTransaction().add(R.id.frag_container, SelectedPicsFragment(), Tag.SELECTED).commit()
                 }
 
                 var fragHost = supportFragmentManager.findFragmentByTag(Tag.HOST)

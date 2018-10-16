@@ -25,6 +25,7 @@ class CameraPickerHostFragment : Fragment(), View.OnClickListener {
     private lateinit var mViewPager: ViewPager
     private lateinit var mTabLayout: TabLayout
     private lateinit var mSelectionBtn: ImageView
+    private lateinit var mCaptureBtn: ImageView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -39,6 +40,8 @@ class CameraPickerHostFragment : Fragment(), View.OnClickListener {
         mViewPager = view.findViewById<ViewPager>(R.id.view_pager)
         mSelectionBtn = view.findViewById(R.id.selection_btn)
         mSelectionBtn.setOnClickListener(this)
+        mCaptureBtn = view.findViewById(R.id.capture_btn)
+        mCaptureBtn.setOnClickListener(this)
         activity?.supportFragmentManager
         setUpViewPager()
     }
@@ -79,6 +82,7 @@ class CameraPickerHostFragment : Fragment(), View.OnClickListener {
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.selection_btn -> mVm.mMessenger.postValue(Message.SELECTED)
+            R.id.capture_btn -> mVm.mMessenger.postValue(Message.CAPTURE)
         }
     }
 

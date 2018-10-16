@@ -5,12 +5,16 @@ import android.app.Activity
 import android.content.Context
 import android.database.Cursor
 import android.os.Build
+import android.os.Environment
 import android.support.v7.app.AppCompatActivity
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.View
 import android.view.ViewPropertyAnimator
 import android.view.WindowManager
 import com.sweetbytesdev.slickpiclib.R
+import java.io.File
+import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -113,5 +117,25 @@ object Utility {
         val resources = context.resources
         val metrics = resources.displayMetrics
         return px / (metrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
+    }
+
+    fun writeImage(jpeg: ByteArray): File {
+        val dir = File(Environment.getExternalStorageDirectory(), "/DCIM/Camera")
+        if (!dir.exists())
+            dir.mkdir()
+        val photo = File(dir, "IMG_" + SimpleDateFormat("yyyyMMdd_HHmmSS", Locale.ENGLISH).format(Date()) + ".jpg")
+        if (photo.exists()) {
+            photo.delete()
+        }
+
+        try {
+            val fos = FileOutputStream(photo.path)
+            fos.write(jpeg)
+            fos.close()
+        } catch (e: Exception) {
+            Log.e("PictureDemo", "Exception in photoCallback", e)
+        }
+
+        return photo
     }
 }

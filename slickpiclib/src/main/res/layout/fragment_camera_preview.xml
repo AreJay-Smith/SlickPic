@@ -13,10 +13,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <com.camerakit.CameraKitView
+    <!--<com.camerakit.CameraKitView-->
+        <!--android:id="@+id/camera"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--app:camera_focus="continuous"-->
+        <!--app:camera_facing="back"/>-->
+
+    <com.wonderkiln.camerakit.CameraView
         android:id="@+id/camera"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:camera_facing="back"/>
+        app:ckFocus="tapWithMarker"
+        app:ckPermissions="picture"/>
 
 </FrameLayout>

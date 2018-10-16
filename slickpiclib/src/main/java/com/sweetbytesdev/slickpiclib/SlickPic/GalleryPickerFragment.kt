@@ -1,6 +1,7 @@
 package com.sweetbytesdev.slickpiclib.SlickPic
 
 
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.net.Uri
 import android.os.Bundle
@@ -45,7 +46,6 @@ class GalleryPickerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         mVm = ViewModelProviders.of(activity!!).get(SlickPicViewModel::class.java)
-
         mRecyclerView = view.findViewById(R.id.recyclerView)
         mAdapter = GalleryPickerAdapter(activity!!)
         mAdapter.addOnSelectionListener(onSelectionListener)
@@ -60,7 +60,7 @@ class GalleryPickerFragment : Fragment() {
         mRecyclerView.layoutManager = gridLayoutManager
         mRecyclerView.adapter = mAdapter
         getImagesFromDeviceGallery()
-
+        mVm.mSelectionList.observe(activity!!, onSelectedListUpdate)
         TOPBAR_HEIGHT = Utility.convertDpToPixel(56f, activity!!)
     }
 
@@ -97,16 +97,26 @@ class GalleryPickerFragment : Fragment() {
         mAdapter.updateImageList(INSTANTLIST)
     }
 
+    var onSelectedListUpdate = object : Observer<MutableList<Img>> {
+        override fun onChanged(selectedList: MutableList<Img>?) {
+            var galleryImageList = mAdapter.getItemList()
+            for (galleryImg in galleryImageList) {
+                galleryImg.isSelected = selectedList!!.contains(galleryImg)
+            }
+            mAdapter.notifyDataSetChanged()
+        }
+
+    }
+
     private val onSelectionListener = object : OnSelectionListener {
         override fun OnClick(img: Img, view: View, position: Int) {
-            Toast.makeText(activity, "short click", Toast.LENGTH_SHORT).show()
-            if (mVm.mSelectionList.contains(img)) {
-                mVm.mSelectionList.remove(img)
-                mAdapter.select(false, position)
+            if (mVm.mSelectionList.value!!.contains(img)) {
+                mVm.mSelectionList.value!!.remove(img)
             } else {
-                mVm.mSelectionList.add(img)
-                mAdapter.select(true, position)
+                mVm.mSelectionList.value!!.add(img)
             }
+            mVm.mSelectionList.postValue(mVm.mSelectionList.value)
+            Toast.makeText(activity, "${mVm.mSelectionList.value!!.size}", Toast.LENGTH_SHORT).show()
         }
 
         override fun OnLongClick(img: Img, view: View, position: Int) {

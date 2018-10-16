@@ -9,11 +9,15 @@ import com.sweetbytesdev.slickpiclib.Utility.Utility
 
 class SlickPicViewModel : ViewModel() {
 
+    var mSelectionList = MutableLiveData<MutableList<Img>>()
+
+    init {
+        mSelectionList.value = mutableListOf()
+    }
+
     val mMessenger: MutableLiveData<Message> by lazy {
         MutableLiveData<Message>()
     }
-
-    var mSelectionList = mutableListOf<Img>()
 
     var TAG = ""
 }

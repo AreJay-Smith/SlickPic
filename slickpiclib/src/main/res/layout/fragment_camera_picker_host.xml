@@ -32,7 +32,8 @@
             android:layout_marginTop="8dp"
             android:background="@color/colorPrimarySlickPic"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/capture_btn" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/capture_btn"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
 
