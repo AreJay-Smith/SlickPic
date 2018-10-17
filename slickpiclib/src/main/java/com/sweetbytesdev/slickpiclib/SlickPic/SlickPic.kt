@@ -4,11 +4,13 @@ import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.MenuItem
 import android.widget.Toast
 import com.sweetbytesdev.slickpiclib.Interfaces.WorkFinish
 import com.sweetbytesdev.slickpiclib.Models.Img
@@ -47,16 +49,22 @@ class SlickPic : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setupStatusBarHidden(this)
-        hideStatusBar(this)
         setContentView(R.layout.slick_pic)
-
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         initialize()
 
         mViewModel = ViewModelProviders.of(this).get(SlickPicViewModel::class.java)
         mViewModel.mMessenger.observe(this, MessageReceiver)
 
-        handleFragmentChange(Tag.HOST)
+        mViewModel.TAG = Tag.HOST
+        handleFragmentChange()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == android.R.id.home) {
+            finish()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun initialize() {
@@ -68,7 +76,10 @@ class SlickPic : AppCompatActivity() {
         Toast.makeText(this, "Message received: ${it.toString()}", Toast.LENGTH_SHORT).show()
 
         when (it) {
-            Message.SELECTED -> handleFragmentChange(Tag.SELECTED)
+            Message.SELECTED -> {
+                mViewModel.TAG = Tag.SELECTED
+                handleFragmentChange()
+            }
         }
     }
 
@@ -78,13 +89,16 @@ class SlickPic : AppCompatActivity() {
 
             Tag.HOST -> finish()
 
-            Tag.SELECTED -> handleFragmentChange(Tag.HOST)
+            Tag.SELECTED -> {
+                mViewModel.TAG = Tag.HOST
+                handleFragmentChange()
+            }
         }
     }
 
-    fun handleFragmentChange(fragTag: String) {
+    fun handleFragmentChange() {
 
-        when(fragTag) {
+        when (mViewModel.TAG) {
             Tag.HOST -> {
                 var fragHost = supportFragmentManager.findFragmentByTag(Tag.HOST)
                 if (fragHost != null) {
@@ -96,6 +110,11 @@ class SlickPic : AppCompatActivity() {
                 var fragSelected = supportFragmentManager.findFragmentByTag(Tag.SELECTED)
                 if (fragSelected != null) {
                     supportFragmentManager.beginTransaction().hide(fragSelected).commit()
+                }
+                if (mViewModel.mReturnToTag.equals(Tag.CAMERA)) {
+                    title = ""
+                } else {
+                    title = getString(R.string.previous_photos)
                 }
                 mViewModel.TAG = Tag.HOST
             }
@@ -113,6 +132,7 @@ class SlickPic : AppCompatActivity() {
                     supportFragmentManager.beginTransaction().hide(fragHost).commit()
                 }
                 mViewModel.TAG = Tag.SELECTED
+                title = getString(R.string.selected_photos)
             }
         }
     }

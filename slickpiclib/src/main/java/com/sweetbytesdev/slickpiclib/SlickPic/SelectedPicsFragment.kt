@@ -83,6 +83,11 @@ class SelectedPicsFragment : Fragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        activity?.title = "Selected Photos"
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         Toast.makeText(activity, "Destroying Gallery frag", Toast.LENGTH_SHORT).show()

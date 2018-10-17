@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="MyLibTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimarySlickPic</item>
+        <item name="colorPrimaryDark">@color/colorPrimarySlickPic</item>
+        <item name="colorAccent">@color/colorPrimarySlickPic</item>
+    </style>
+</resources>

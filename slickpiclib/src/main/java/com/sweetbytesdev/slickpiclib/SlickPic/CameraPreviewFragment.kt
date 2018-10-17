@@ -3,6 +3,7 @@ package com.sweetbytesdev.slickpiclib.SlickPic
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.*
@@ -12,38 +13,34 @@ import com.sweetbytesdev.slickpiclib.R
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
+import com.sweetbytesdev.slickpiclib.Interfaces.OnOrientationChangeListener
 import com.sweetbytesdev.slickpiclib.Models.Img
 //import com.camerakit.CameraKit
 import com.sweetbytesdev.slickpiclib.Utility.Message
+import com.sweetbytesdev.slickpiclib.Utility.OrientationManager
 import com.sweetbytesdev.slickpiclib.Utility.Utility
 import com.wonderkiln.camerakit.CameraView
+import android.hardware.SensorManager
+import android.opengl.Matrix
+import com.wonderkiln.camerakit.CameraKitImage
 
 
 /**
  * A simple [Fragment] subclass.
  *
  */
-class CameraPreviewFragment : Fragment(), OrientationListener {
-    override fun onOrientationChanged(p0: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+class CameraPreviewFragment : Fragment(), OnOrientationChangeListener {
 
     lateinit var mViewModel: SlickPicViewModel
 //    lateinit var mCameraKitView: CameraKitView
     lateinit var mCamera: CameraView
-    lateinit var mCaptureBtn: ImageView
-    lateinit var mOrientationManager: OrientationManager
+//    lateinit var mCaptureBtn: ImageView
+    var mDeviceOrientation = OrientationManager.ScreenOrientation.PORTRAIT
 
 
     companion object {
 
         fun getInstance() = CameraPreviewFragment()
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -58,9 +55,9 @@ class CameraPreviewFragment : Fragment(), OrientationListener {
         mViewModel.mMessenger.observe(activity!!, onMessageReceived)
 //        mCameraKitView = view.findViewById<CameraKitView>(R.id.camera)
         mCamera = view.findViewById(R.id.camera)
-        view.findViewById<Button>(R.id.test_button).setOnClickListener {
-            mViewModel.mMessenger.postValue(Message.SELECTED)
-        }
+
+//        var orientationManager = OrientationManager(activity!!, SensorManager.SENSOR_DELAY_NORMAL, this)
+//        orientationManager.enable()
     }
 
     var onMessageReceived = object : Observer<Message> {
@@ -69,7 +66,9 @@ class CameraPreviewFragment : Fragment(), OrientationListener {
                 Message.CAPTURE -> mCamera.captureImage {
                     if (it.jpeg != null) {
                         synchronized(it) {
+//                            var orientedImage = orientImage(it)
                             val photo = Utility.writeImage(it.jpeg)
+//                            val photo = Utility.writeImage(orientedImage)
                             var freshlyTakenImage = Img("", photo.getAbsolutePath(), "", true, "", -1)
                             mViewModel.mSelectionList.value!!.add(freshlyTakenImage)
                             mViewModel.mSelectionList.postValue(mViewModel.mSelectionList.value)
@@ -83,6 +82,20 @@ class CameraPreviewFragment : Fragment(), OrientationListener {
 
     }
 
+    fun orientImage(image: CameraKitImage): Bitmap {
+        when (mDeviceOrientation) {
+            OrientationManager.ScreenOrientation.LANDSCAPE -> {
+                var matrix = android.graphics.Matrix()
+                matrix.postRotate(90f)
+                return Bitmap.createBitmap(image.bitmap, 0, 0, image.bitmap.width, image.bitmap.height, matrix, true)
+            }
+            OrientationManager.ScreenOrientation.REVERSED_LANDSCAPE -> {
+
+            }
+        }
+        return image.bitmap
+    }
+
     override fun onResume() {
         super.onResume()
 //        mCameraKitView.onResume()
@@ -93,6 +106,11 @@ class CameraPreviewFragment : Fragment(), OrientationListener {
         super.onPause()
 //        mCameraKitView.onPause()
         mCamera.stop()
+    }
+
+    override fun onOrientationChangeListener(orientation: OrientationManager.ScreenOrientation) {
+        mDeviceOrientation = orientation
+        Toast.makeText(activity, "Orientation is now $orientation", Toast.LENGTH_SHORT).show()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {

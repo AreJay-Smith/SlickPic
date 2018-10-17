@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.sweetbytesdev.slickpiclib.Models.Img
 import com.sweetbytesdev.slickpiclib.Utility.Message
+import com.sweetbytesdev.slickpiclib.Utility.Tag
 import com.sweetbytesdev.slickpiclib.Utility.Utility
 
 class SlickPicViewModel : ViewModel() {
@@ -19,5 +20,6 @@ class SlickPicViewModel : ViewModel() {
         MutableLiveData<Message>()
     }
 
-    var TAG = ""
+    var TAG = Tag.HOST
+    var mReturnToTag = Tag.CAMERA
 }

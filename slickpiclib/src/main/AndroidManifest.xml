@@ -9,6 +9,8 @@
 
     <application>
         <activity android:name=".SlickPic.SlickPic"
+                  android:theme="@style/MyLibTheme"
+                  android:screenOrientation="portrait"
                   android:noHistory="true">
         </activity>
     </application>

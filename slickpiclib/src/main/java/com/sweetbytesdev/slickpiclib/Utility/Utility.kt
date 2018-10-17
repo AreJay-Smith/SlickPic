@@ -4,6 +4,7 @@ import android.animation.AnimatorListenerAdapter
 import android.app.Activity
 import android.content.Context
 import android.database.Cursor
+import android.graphics.Bitmap
 import android.os.Build
 import android.os.Environment
 import android.support.v7.app.AppCompatActivity
@@ -47,7 +48,7 @@ object Utility {
             val w = appCompatActivity.window
             val decorView = w.decorView
             // Hide Status Bar.
-            val uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN
+            val uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
             decorView.systemUiVisibility = uiOptions
         }
     }
@@ -135,6 +136,36 @@ object Utility {
         } catch (e: Exception) {
             Log.e("PictureDemo", "Exception in photoCallback", e)
         }
+
+        return photo
+    }
+
+    fun writeImage(bitmap: Bitmap): File {
+        val dir = File(Environment.getExternalStorageDirectory(), "/DCIM/Camera")
+        if (!dir.exists())
+            dir.mkdir()
+        val photo = File(dir, "IMG_" + SimpleDateFormat("yyyyMMdd_HHmmSS", Locale.ENGLISH).format(Date()) + ".jpg")
+        if (photo.exists()) {
+            photo.delete()
+        }
+
+//        try {
+//            val fos = FileOutputStream(photo.path)
+//            fos.write(jpeg)
+//            fos.close()
+//        } catch (e: Exception) {
+//            Log.e("PictureDemo", "Exception in photoCallback", e)
+//        }
+
+        try {
+            val out = FileOutputStream(photo.path)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)
+            out.flush()
+            out.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
 
         return photo
     }

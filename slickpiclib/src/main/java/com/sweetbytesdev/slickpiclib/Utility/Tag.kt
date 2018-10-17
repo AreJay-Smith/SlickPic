@@ -1,7 +1,8 @@
 package com.sweetbytesdev.slickpiclib.Utility
 
 object Tag {
-    const val HOST = "host"
     const val SELECTED = "selected"
-    const val PREVIEW = "preview"
+    const val CAMERA = "camera"
+    const val GALLERY = "gallery"
+    const val HOST = "host"
 }
