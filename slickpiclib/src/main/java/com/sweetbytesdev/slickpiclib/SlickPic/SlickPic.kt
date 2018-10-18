@@ -4,24 +4,13 @@ import android.app.Activity
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
-import android.graphics.drawable.ColorDrawable
-import android.net.Uri
 import android.os.Build
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore
+import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
-import android.widget.Toast
 import com.sweetbytesdev.slickpiclib.Interfaces.WorkFinish
-import com.sweetbytesdev.slickpiclib.Models.Img
 import com.sweetbytesdev.slickpiclib.R
-import com.sweetbytesdev.slickpiclib.Utility.Message
-import com.sweetbytesdev.slickpiclib.Utility.PermUtil
-import com.sweetbytesdev.slickpiclib.Utility.Tag
-import com.sweetbytesdev.slickpiclib.Utility.Utility
-import com.sweetbytesdev.slickpiclib.Utility.Utility.hideStatusBar
-import com.sweetbytesdev.slickpiclib.Utility.Utility.setupStatusBarHidden
-import java.util.*
+import com.sweetbytesdev.slickpiclib.Utility.*
 
 class SlickPic : AppCompatActivity() {
 
@@ -29,13 +18,16 @@ class SlickPic : AppCompatActivity() {
 
     companion object {
         private val SELECTION = "selection"
+        private val MODE = "mode"
+        val IMAGE_RESULTS = "image_results"
 
-        fun start(context: Activity, requestCode: Int, selectionCount: Int) {
+        fun start(context: Activity, requestCode: Int, selectionCount: Int, mode: Mode) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 PermUtil.checkForCamara_WritePermissions(context, object : WorkFinish {
                     override fun onWorkFinish(check: Boolean) {
                         val i = Intent(context, SlickPic::class.java)
                         i.putExtra(SELECTION, selectionCount)
+                        i.putExtra(MODE, mode)
                         context.startActivityForResult(i, requestCode)
                     }
                 })
@@ -51,10 +43,12 @@ class SlickPic : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.slick_pic)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         initialize()
 
         mViewModel = ViewModelProviders.of(this).get(SlickPicViewModel::class.java)
         mViewModel.mMessenger.observe(this, MessageReceiver)
+        mViewModel.mMode = intent.extras.getSerializable(MODE) as Mode
 
         mViewModel.TAG = Tag.HOST
         handleFragmentChange()
@@ -73,8 +67,6 @@ class SlickPic : AppCompatActivity() {
 
     var MessageReceiver = Observer<Message> {
         // Message received from fragments
-        Toast.makeText(this, "Message received: ${it.toString()}", Toast.LENGTH_SHORT).show()
-
         when (it) {
             Message.SELECTED -> {
                 mViewModel.TAG = Tag.SELECTED
@@ -122,9 +114,13 @@ class SlickPic : AppCompatActivity() {
             Tag.SELECTED -> {
                 var fragSelected = supportFragmentManager.findFragmentByTag(Tag.SELECTED)
                 if (fragSelected != null) {
-                    supportFragmentManager.beginTransaction().show(fragSelected).commit()
+                    supportFragmentManager.beginTransaction()
+                            .setCustomAnimations(R.anim.abc_fade_in, R.anim.abc_fade_out, R.anim.abc_fade_out, R.anim.abc_fade_in)
+                            .show(fragSelected).commit()
                 } else {
-                    supportFragmentManager.beginTransaction().add(R.id.frag_container, SelectedPicsFragment(), Tag.SELECTED).commit()
+                    supportFragmentManager.beginTransaction()
+                            .setCustomAnimations(R.anim.abc_fade_in, R.anim.abc_fade_out, R.anim.abc_fade_out, R.anim.abc_fade_in)
+                            .add(R.id.frag_container, SelectedPicsFragment(), Tag.SELECTED).commit()
                 }
 
                 var fragHost = supportFragmentManager.findFragmentByTag(Tag.HOST)

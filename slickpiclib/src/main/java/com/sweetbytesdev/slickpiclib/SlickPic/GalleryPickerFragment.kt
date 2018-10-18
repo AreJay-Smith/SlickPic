@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.sweetbytesdev.slickpiclib.Adapters.GalleryPickerAdapter
 import com.sweetbytesdev.slickpiclib.Interfaces.OnSelectionListener
 import com.sweetbytesdev.slickpiclib.Models.Img
@@ -116,17 +115,14 @@ class GalleryPickerFragment : Fragment() {
                 mVm.mSelectionList.value!!.add(img)
             }
             mVm.mSelectionList.postValue(mVm.mSelectionList.value)
-            Toast.makeText(activity, "${mVm.mSelectionList.value!!.size}", Toast.LENGTH_SHORT).show()
         }
 
         override fun OnLongClick(img: Img, view: View, position: Int) {
-            Toast.makeText(activity, "long click", Toast.LENGTH_SHORT).show()
         }
 
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        Toast.makeText(activity, "Destroying Gallery frag", Toast.LENGTH_SHORT).show()
     }
 }

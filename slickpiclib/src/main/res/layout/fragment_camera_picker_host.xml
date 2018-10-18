@@ -16,6 +16,7 @@
         android:layout_marginBottom="30dp"/>
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/bottom_bar_container"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/colorPrimarySlickPicTransparent"

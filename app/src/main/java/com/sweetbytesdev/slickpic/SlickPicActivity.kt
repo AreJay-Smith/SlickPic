@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import com.sweetbytesdev.slickpiclib.SlickPic.SlickPic
+import com.sweetbytesdev.slickpiclib.Utility.Mode
 
 class SlickPicActivity : AppCompatActivity() {
 
@@ -13,7 +14,7 @@ class SlickPicActivity : AppCompatActivity() {
 
         var button = findViewById<Button>(R.id.button)
         button.setOnClickListener {
-            SlickPic.start(this, 2, 5)
+            SlickPic.start(this, 2, 5, Mode.BUSINESS_CARD)
         }
     }
 }
